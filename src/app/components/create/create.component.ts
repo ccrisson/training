@@ -14,14 +14,62 @@ export class CreateComponent implements OnInit {
   constructor() {
    }
 
-  addSet(exercise, weight, reps) {
-  	let set2 = {
+  addSet(exercise, weight, reps, numSets) {
+  	if (reps < 1){
+  		reps = 1;
+  	}
+  	if (weight < 1){
+  		weight = 1;
+  	}
+  	if (numSets < 1){
+  		numSets = 1;
+  	}
+  	let set = {
   		exercise: exercise,
   		weight: weight,
-  		reps: reps};
-  	this.activeExercises.push(exercise);
-  	this.sets.push(set2);
-  	//console.log(this.sets);
+  		reps: reps,
+  	    numSets: numSets
+  	};
+  	
+  	if(!this.duplicateSet(set)){
+  	  this.sets.push(set);
+  	  this.activeExercises.push(exercise);
+  	  this.sets.sort(function(a, b){
+  	   	return a.weight - b.weight;
+  	    });
+    } 
+  
+  }
+
+  deleteSet(exercise, weight, reps){
+  	let temp;
+  	this.sets.forEach(function(element){
+  		if (element.exercise == exercise &&
+  			element.weight == weight &&
+  			element.reps == reps){
+  			temp = element;
+  		}
+  	})
+  	let i = this.sets.indexOf(temp);
+  	this.sets.splice(i, 1);
+  	let j = this.activeExercises.indexOf(exercise);
+  	this.activeExercises.splice(j, 1);
+  }
+
+  duplicateSet(set){
+  	let flag = false;
+  	let obj = {};
+  	this.sets.forEach(function(element){
+  		if(element.exercise === set.exercise &&
+  		       element.weight === set.weight &&
+  			   element.reps === set.reps){
+  		  flag = true;
+  		  let temp = +element.numSets + +set.numSets;
+  		  element.numSets = temp;
+  		}
+  	});
+
+  	return flag;
   }
 
   ngOnInit() {

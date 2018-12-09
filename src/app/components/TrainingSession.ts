@@ -1,5 +1,6 @@
 export interface Sets {
 	exercise: String;
-	weight: Number;
-	reps: Number;
+	weight: number;
+	reps: number;
+	numSets: number;
 }
